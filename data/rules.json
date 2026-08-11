@@ -1,0 +1,119 @@
+{
+ "_comment": "Параметры логики генерации (раньше были константами в коде namer/*.py). Можно менять без правки Python.",
+ "length": {
+  "_comment": "min — целевая нижняя граница из промпта; soft_min — реальная нижняя граница эталона (8 % названий заказчика короче 30). Если добрать длину можно только слабым признаком (вес ниже fill_floor), название остаётся коротким, но честным.",
+  "min": 30,
+  "soft_min": 24,
+  "max": 60,
+  "target_low": 38,
+  "target_high": 50,
+  "fill_floor": -0.4
+ },
+ "fill_order": [],
+ "slot_capacity": {
+  "_comment": "Сколько признаков одного слота допустимо в названии (п. 9.4 промпта).",
+  "2": 2,
+  "3": 1,
+  "4": 1,
+  "5": 1,
+  "6": 1,
+  "7": 1,
+  "8": 2,
+  "9": 1,
+  "10": 1,
+  "11": 1,
+  "12": 1,
+  "13": 2
+ },
+ "stop_stems": {
+  "_comment": "Основы служебных слов, которые не считаются конфликтом признаков и не входят в добор длины.",
+  "words": [
+   "с",
+   "со",
+   "из",
+   "на",
+   "в",
+   "и",
+   "до",
+   "за",
+   "два",
+   "одном"
+  ]
+ },
+ "discouraged_penalty": -0.3,
+ "composition": {
+  "_comment": "Пороги разбора состава ткани (namer/composition.py, п. 5.2-5.3 промпта). material_column/fabric_priority_penalty — название ткани (Вид материала/Вид полотна/Рисунок ткани) приоритетнее словарной колонки состава: если ткань определилась, кандидаты этой колонки получают штраф.",
+  "material_column": "Состав",
+  "fabric_priority_penalty": -0.3,
+  "main_threshold": 65,
+  "poliviscosa_fibers": [
+   "полиэстер",
+   "вискоза"
+  ],
+  "poliviscosa_divisions": [
+   "W70",
+   "W10",
+   "W80"
+  ],
+  "pair_max_gap": 30,
+  "valuable_min_share": 3,
+  "elastane_min_share": 2,
+  "trace_fibers": {
+   "лён": {
+    "min_share": 0,
+    "max_share": 65,
+    "prefix": "со",
+    "word": "льном"
+   },
+   "лиоцелл": {
+    "min_share": 0,
+    "max_share": 65,
+    "prefix": "с",
+    "word": "лиоцеллом"
+   }
+  }
+ },
+ "head_special": {
+  "_comment": "Особые случаи определения вида изделия, которые не выводятся из справочника group_head (namer/features.py).",
+  "group_77_skirt_silhouette": [
+   "a - силуэт",
+   "a-силуэт",
+   "трапеци"
+  ],
+  "group_77_skirt_model": [
+   "плиссиров",
+   "в складку",
+   "асимметр"
+  ],
+  "group_77_skirt_length": [
+   "midi",
+   "maxi",
+   "mini"
+  ],
+  "group_77_default_head": "Брюки",
+  "group_77_skirt_head": "Юбка",
+  "tshirt_with_features_long_sleeve_head": "Лонгслив",
+  "tshirt_with_features_no_sleeve_head": "Топ",
+  "tshirt_with_features_default_head": "Футболка",
+  "tank_with_features_no_sleeve_head": "Топ",
+  "tank_with_features_default_head": "Майка",
+  "tshirt_long_sleeve_head": "Лонгслив"
+ },
+ "fallback_head_by_division": {
+  "_comment": "Родовое слово по дивизиону (PG), когда ничего другое не подошло (последний шаг determine_head).",
+  "W10": "Блузка",
+  "W30": "Футболка",
+  "W50": "Куртка",
+  "W60": "Джемпер",
+  "W70": "Брюки",
+  "W71": "Джинсы",
+  "W80": "Платье",
+  "default": "Джемпер"
+ },
+ "head_lexicon_learning": {
+  "_comment": "Пороги обучения лексикона видов изделия по эталонам (namer/model.py learn_head_lexicon).",
+  "min_count": 2,
+  "min_share": 0.6,
+  "group_share": 0.7
+ }
+}
