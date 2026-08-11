@@ -212,26 +212,23 @@ def build_candidates(row: Row, dicts, head: str) -> list[Candidate]:
                 fabric_found = True
 
     # название ткани приоритетнее словарной колонки состава (п. 5.1): если
-    # ткань определилась явно, кандидаты из этой колонки получают штраф,
-    # а не соревнуются с ней на равных
+    # ткань определилась явно, кандидаты из этой колонки исключаются полностью
     material_column = dicts.rules.composition.get("material_column")
     if fabric_found and material_column:
-        penalty = dicts.rules.composition["fabric_priority_penalty"]
         prefix = f"{material_column}|"
-        for cand in out:
-            if cand.slot == 3 and cand.key.startswith(prefix):
-                cand.prior += penalty
+        out = [c for c in out if not (c.slot == 3 and c.key.startswith(prefix))]
 
     shares = parse_composition(row.get("Composition") or row.get("Состав"), dicts)
-    for text, key, is_service in material_from_composition(shares, dicts, gender, division):
+    for text, key, is_service in material_from_composition(shares, dicts, gender, division, group):
         prior = -0.2 if (is_service and fabric_found) else (0.0 if fabric_found else 0.3)
         add(3, text, key, f"Composition={row.get('Composition')}", prior=prior,
             extra={"service": is_service})
 
     # --- деним: базовый материал «хлопковые» (п. 5.5) ---------------------
-    if division == "W71" or group in ("71", "72", "79", "5D", "5G", "5W", "8D", "86"):
-        add(3, dicts.agree(dicts.fiber_main.get("хлопок"), gender), "деним|хлопок",
-            "правило W71", prior=0.6)
+    # Для денима хлопок уже обрабатывается в material_from_composition, не дублировать
+    # if division == "W71" or group in ("71", "72", "79", "5D", "5G", "5W", "8D", "86"):
+    #     add(3, dicts.agree(dicts.fiber_main.get("хлопок"), gender), "деним|хлопок",
+    #         "правило W71", prior=0.6)
 
     # --- «со стиркой» для трикотажа W30 (раздел 8) ------------------------
     if division == "W30" and norm(row.get("Эффект")) not in ("", "без эффектов"):

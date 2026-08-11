@@ -615,7 +615,12 @@
   "Силуэт": {
    "slim": {
     "slot": 4,
-    "phrase": "slim fit"
+    "phrase": {
+     "m": "узкий",
+     "f": "узкая",
+     "n": "узкое",
+     "p": "узкие"
+    }
    },
    "super slim": {
     "slot": 4,
@@ -674,7 +679,7 @@
    },
    "slim straight": {
     "slot": 4,
-    "phrase": "slim straight"
+    "phrase": "узкий прямого кроя"
    },
    "carrot": {
     "slot": 4,
